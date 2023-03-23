@@ -37,6 +37,15 @@ odoo.define('ALTANMYA_Low_Stock_POS_Alert.Low_Stock_POS_Alert', function (requir
                             });
                         }
                     }
+                    else
+                    {
+                        check_out_of_stock = true
+                        Gui.showPopup('ErrorPopup',
+                        {
+                        title: 'Cannot order a product more than its availability',
+                        body: "Product '" + product_name + "' is out of stock.",
+                        });
+                    }
                 }
             }
             if(check_out_of_stock == false)
