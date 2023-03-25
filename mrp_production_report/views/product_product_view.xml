@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_product_product_inherited" model="ir.ui.view">
+        <field name="name">product.product.inherited</field>
+        <field name="model">product.product</field>
+        <field name="inherit_id" ref="product.product_normal_form_view"/>
+        <field name="arch" type="xml">
+            <field name="detailed_type" position="before">
+                <field name="sheet"/>
+            </field>
+        </field>
+    </record>
+</odoo>

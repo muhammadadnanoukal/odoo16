@@ -1,0 +1,275 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+   <data>
+      <template id="purchase_requisition_report">
+	<t t-call="web.html_container">
+        <t t-foreach="docs" t-as="o">
+            <t t-call="web.basic_layout">
+                <div class="page">
+                    <div class="oe_structure"/>
+                    <div class="row">
+                        <div class="col-3 m-2">
+                            <img class="img" src="/miamed_purchase_requisition_report/static/src/img/logo.png"/>
+                        </div>
+                    </div>
+                    <div class="table-responssive">
+                        <table class="table table-light" style="font-size: 24px table-layout: fixed;">
+                            <thead>
+                                <tr style="background-color: #F4F4F4;">
+                                    <div class="table-responssive">
+                                        <table class="table">
+                                            <tbody>
+                                                <tr style="background-color: #F4F4F4;">
+                                                    <td class="border" align="center" valign="middle">
+                                                        <p class="font-weight-bold">PR.No.</p>
+                                                    </td>
+                                                    <td class="border" align="center" valign="middle">
+                                                        <p class="font-weight-bold">Description</p>
+                                                    </td>
+                                                    <td class="border" align="center" valign="middle">
+                                                        <p class="font-weight-bold">QTY</p>
+                                                    </td>
+                                                    <td class="border" align="center" valign="middle">
+                                                        <p class="font-weight-bold">Unit</p>
+                                                    </td>
+                                                    <td class="border" align="center" valign="middle">
+                                                        <p class="font-weight-bold">Last Price</p>
+                                                    </td>
+                                                    <td class="border" align="center" valign="middle">
+                                                        <p class="font-weight-bold">Lowest Price</p>
+                                                    </td>
+                                                    <td class="border" align="center" valign="middle">
+                                                        <p class="font-weight-bold">Saving</p>
+                                                    </td>
+                                                    <td class="border" align="center" valign="middle">
+                                                        <p class="font-weight-bold">Comments</p>
+                                                    </td>
+                                                </tr>
+                                                <t t-set="rowspan" t-value="0"/>
+                                                <t t-foreach="o.line_ids" t-as="line_ids">
+                                                    <t t-set="rowspan" t-value="rowspan+1"/></t>
+                                                <t t-set="counter" t-value="0"/>
+                                                <t t-foreach="o.line_ids" t-as="line_ids">
+                                                    <t t-set="counter" t-value="counter+1"/>
+                                                    <tr>
+                                                        <t t-if="counter == 1">
+                                                            <td class="border" style="vertical-align : middle;text-align:center;" t-att-rowspan="rowspan">
+                                                                <t t-if="o.name">
+                                                                    <span class="font-weight-bold" t-field="o.name"/>
+                                                                </t>
+                                                            </td>
+                                                        </t>
+                                                        <td class="border" align="center" valign="middle">
+                                                            <span t-field="line_ids.product_id.name"/>
+                                                        </td>
+                                                        <td class="border" align="center" valign="middle">
+                                                            <span t-field="line_ids.product_qty"/>
+                                                        </td>
+                                                        <td class="border" align="center" valign="middle">
+                                                            <span t-field="line_ids.product_uom_id.category_id.name"/>
+                                                        </td>
+                                                        <t t-if="counter == 1">
+                                                            <td class="border" style="vertical-align : middle;text-align:center;" align="center" valign="middle" t-att-rowspan="rowspan">
+                                                                <div class="table-responssive">
+                                                                    <table class="table">
+                                                                        <tbody>
+                                                                            <t t-if="o.line_ids">
+                                                                                <t t-foreach="o.line_ids" t-as="line_ids">
+                                                                                    <t t-set="product_id" t-value="line_ids.product_id.product_tmpl_id.id"/>
+                                                                                    <t t-set="last_price" t-value="o.run_sql(product_id)"/>
+                                                                                    <tr>
+                                                                                        <td class="border" align="center" valign="middle">
+                                                                                            <span t-esc="line_ids.product_id.name"/>
+                                                                                            <span>: </span>
+                                                                                            <span t-esc="last_price"/>
+                                                                                        </td>
+                                                                                    </tr>
+                                                                                </t>
+                                                                            </t>
+                                                                        </tbody>
+                                                                    </table>
+                                                                </div>
+                                                            </td>
+                                                            <td class="border" style="vertical-align : middle;text-align:center;" align="center" valign="middle" t-att-rowspan="rowspan">
+                                                                <div class="table-responssive">
+                                                                    <table class="table">
+                                                                        <tbody>
+                                                                            <t t-if="o.line_ids">
+                                                                                <t t-foreach="o.compute_lowest_prices()" t-as="lowest_price">
+                                                                                    <tr>
+                                                                                        <td class="border" align="center" valign="middle">
+                                                                                            <span t-esc="lowest_price"/>
+                                                                                        </td>
+                                                                                    </tr>
+                                                                                </t>
+                                                                            </t>
+                                                                        </tbody>
+                                                                    </table>
+                                                                </div>
+                                                            </td>
+                                                            <td class="border" align="center" valign="middle" t-att-rowspan="rowspan"></td>
+                                                            <td class="border" align="center" valign="middle" t-att-rowspan="rowspan"></td>
+                                                        </t>
+                                                    </tr>
+                                                </t>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <t t-if="o.purchase_ids">
+                                        <td class="border" colspan="9">
+                                            <div class="table-responssive">
+                                                <table class="table" style="font-size: 24px table-layout: fixed;">
+                                                    <tbody>
+                                                        <t t-foreach="o.purchase_ids" t-as="purchase_ids">
+                                                            <tr style="background-color:#F4F4F4;">
+                                                                <td class="border" align="center" valign="middle" colspan="10">
+                                                                    <span class="font-weight-bold" t-field="purchase_ids.partner_id"/>
+                                                                </td>
+                                                            </tr>
+                                                            <tr style="background-color: #F4F4F4;">
+                                                                <td class="border" align="center" valign="middle">
+                                                                    <p class="font-weight-bold">Description</p>
+                                                                </td>
+                                                                <td class="border" align="center" valign="middle">
+                                                                    <p class="font-weight-bold">Qty</p>
+                                                                </td>
+                                                                <td class="border" align="center" valign="middle">
+                                                                    <p class="font-weight-bold">Unit Price</p>
+                                                                </td>
+                                                                <td class="border" align="center" valign="middle">
+                                                                    <p class="font-weight-bold">Total Price</p>
+                                                                </td>
+                                                                <td class="border" align="center" valign="middle">
+                                                                    <p class="font-weight-bold">Delivery Term</p>
+                                                                </td>
+                                                                <td class="border" align="center" valign="middle">
+                                                                    <p class="font-weight-bold">Delivery Time</p>
+                                                                </td>
+                                                                <td class="border" align="center" valign="middle">
+                                                                    <p class="font-weight-bold">Payment Term</p>
+                                                                </td>
+                                                                <td class="border" align="center" valign="middle">
+                                                                    <p class="font-weight-bold">Total Po.Price</p>
+                                                                </td>
+                                                                <td class="border" align="center" valign="middle">
+                                                                    <p class="font-weight-bold">RFQ State</p>
+                                                                </td>
+                                                            </tr>
+                                                            <t t-set="rowspan" t-value="0"/>
+                                                            <t t-foreach="purchase_ids.order_line" t-as="order_line">
+                                                                <t t-set="rowspan" t-value="rowspan+1"/></t>
+                                                            <t t-set="counter" t-value="0"/>
+                                                            <t t-foreach="purchase_ids.order_line" t-as="order_line">
+                                                                <t t-set="counter" t-value="counter+1"/>
+                                                                <tr>
+                                                                    <td class="border" align="center" valign="middle">
+                                                                        <span t-field="order_line.product_id.name"/>
+                                                                    </td>
+                                                                    <td class="border" align="center" valign="middle">
+                                                                        <span t-field="order_line.product_qty"/>
+                                                                    </td>
+                                                                    <td class="border" align="center" valign="middle">
+                                                                        <span t-field="order_line.price_unit"/>
+                                                                    </td>
+                                                                    <td class="border" align="center" valign="middle">
+                                                                        <span t-field="order_line.price_subtotal"/>
+                                                                    </td>
+                                                                    <t t-if="counter == 1">
+                                                                        <td class="border" style="vertical-align : middle;text-align:center;" t-att-rowspan="rowspan">
+                                                                            <t t-if="purchase_ids.incoterm_id">
+                                                                                <span t-field="purchase_ids.incoterm_id"/>
+                                                                            </t>
+                                                                            <t t-if="not purchase_ids.incoterm_id">
+                                                                                <span>---</span>
+                                                                            </t>
+                                                                        </td>
+                                                                        <td class="border" style="vertical-align : middle;text-align:center;" t-att-rowspan="rowspan">
+                                                                            <t t-if="purchase_ids.date_planned">
+                                                                                <span t-field="purchase_ids.date_planned"/>
+                                                                            </t>
+                                                                            <t t-if="not purchase_ids.date_planned">
+                                                                                <span>---</span>
+                                                                            </t>
+                                                                        </td>
+                                                                        <td class="border" style="vertical-align : middle;text-align:center;" t-att-rowspan="rowspan">
+                                                                            <t t-if="purchase_ids.payment_term_id">
+                                                                                <span t-field="purchase_ids.payment_term_id"/>
+                                                                            </t>
+                                                                            <t t-if="not purchase_ids.payment_term_id">
+                                                                                <span>---</span>
+                                                                            </t>
+                                                                        </td>
+                                                                        <td class="border" style="vertical-align : middle;text-align:center;" t-att-rowspan="rowspan">
+                                                                            <span t-field="purchase_ids.amount_total"/>
+                                                                        </td>
+                                                                        <td class="border" style="vertical-align : middle;text-align:center;" t-att-rowspan="rowspan">
+                                                                            <span t-field="purchase_ids.state"/>
+                                                                        </td>
+                                                                    </t>
+                                                                </tr>
+                                                            </t>
+                                                        </t>
+                                                    </tbody>
+                                                </table>
+                                            </div>
+                                        </td>
+                                    </t>
+                                </tr>
+                            </tbody>
+                            <tfoot>
+                                <div class="table-responssive">
+                                    <table class="table table-light" style="font-size: 24px table-layout: fixed;">
+                                        <tbody>
+                                            <tr>
+                                                <td style="background-color: #F4F4F4;" class="border" align="center" valign="middle">
+                                                    <p class="font-weight-bold">Requester Approval</p>
+                                                </td>
+                                                <td style="background-color: #F4F4F4;" class="border" align="center" valign="middle">
+                                                    <p class="font-weight-bold">Requester Manger Approval</p>
+                                                </td>
+                                                <td style="background-color: #F4F4F4;" class="border" align="center" valign="middle">
+                                                    <p class="font-weight-bold">Buyer</p>
+                                                </td>
+                                                <td style="background-color: #F4F4F4;" class="border" align="center" valign="middle">
+                                                    <p class="font-weight-bold">Head of Procurment Dep.</p>
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td class="border" align="center" valign="middle">
+                                                    <br/>
+                                                    <br/>
+                                                    <br/>
+                                                </td>
+                                                <td class="border" align="center" valign="middle">
+                                                    <br/>
+                                                    <br/>
+                                                    <br/>
+                                                </td>
+                                                <td class="border" align="center" valign="middle">
+                                                    <br/>
+                                                    <br/>
+                                                    <br/>
+                                                </td>
+                                                <td class="border" align="center" valign="middle">
+                                                    <br/>
+                                                    <br/>
+                                                    <br/>
+                                                </td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </tfoot>
+                        </table>
+                    </div>
+                    <div class="oe_structure"/></div>
+            </t>
+        </t>
+    </t>
+      </template>
+   </data>
+</odoo>
